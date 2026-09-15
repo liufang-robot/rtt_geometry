@@ -34,6 +34,9 @@
 #include <rtt/internal/DataSourceGenerator.hpp>
 #include <boost/lexical_cast.hpp>
 
+// Follow OroGen on MSVC: instantiate templates in consumers. Explicit port
+// exports fail with C2908 for their covariant getEndpoint() return types.
+#ifndef _MSC_VER
 #define DECLARE_RTT_VECTOR_EXPORTS( VectorType ) \
 template class RTT_EXPORT RTT::internal::DataSourceTypeInfo< VectorType >; \
 template class RTT_EXPORT RTT::internal::DataSource< VectorType >; \
@@ -72,6 +75,8 @@ DECLARE_RTT_MATRIX_EXPORTS( Eigen::MatrixXd )
 DECLARE_RTT_MATRIX_EXPORTS( Eigen::Matrix2d )
 DECLARE_RTT_MATRIX_EXPORTS( Eigen::Matrix3d )
 DECLARE_RTT_MATRIX_EXPORTS( Eigen::Matrix4d )
+
+#endif
 
 #include <Eigen/Core>
 namespace Eigen{

@@ -40,6 +40,8 @@ public:
 };
 }
 
+// MSVC consumers instantiate these templates locally, as in OroGen typekits.
+#ifndef _MSC_VER
 #ifdef CORELIB_DATASOURCE_HPP
 #define DECLARE_VECTOR_CORELIB_DATASOURCE_HPP(VectorType) \
     extern template class RTT::internal::DataSourceTypeInfo< VectorType >; \
@@ -155,6 +157,8 @@ public:
     DECLARE_MATRIX_ORO_CORELIB_ATTRIBUTE_HPP(Eigen::Matrix3d)
     DECLARE_MATRIX_ORO_CORELIB_ATTRIBUTE_HPP(Eigen::Matrix4d)
 #endif
+
+#endif // ifndef _MSC_VER
 
 #endif // ifndef EIGEN_TYPEKIT_HPP
 
