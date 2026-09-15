@@ -67,7 +67,7 @@ public:
     DECLARE_VECTOR_ORO_CORELIB_DATASOURCES_HPP(Eigen::Vector6d)
 #endif
 
-#ifdef ORO_OUTPUT_PORT_HPP
+#if defined(ORO_OUTPUT_PORT_HPP) && !defined(_MSC_VER)
     extern template class RTT::OutputPort< Eigen::VectorXd >;
     extern template class RTT::OutputPort< Eigen::Vector2d >;
     extern template class RTT::OutputPort< Eigen::Vector3d >;
@@ -75,7 +75,7 @@ public:
     extern template class RTT::OutputPort< Eigen::Vector6d >;
 #endif
 
-#ifdef ORO_INPUT_PORT_HPP
+#if defined(ORO_INPUT_PORT_HPP) && !defined(_MSC_VER)
     extern template class RTT::InputPort< Eigen::VectorXd >;
     extern template class RTT::InputPort< Eigen::Vector2d >;
     extern template class RTT::InputPort< Eigen::Vector3d >;
@@ -127,13 +127,13 @@ public:
     DECLARE_MATRIX_CORELIB_DATASOURCE_HPP(Eigen::Matrix3d)
     DECLARE_MATRIX_CORELIB_DATASOURCE_HPP(Eigen::Matrix4d)
 #endif
-#ifdef ORO_OUTPUT_PORT_HPP
+#if defined(ORO_OUTPUT_PORT_HPP) && !defined(_MSC_VER)
     extern template class RTT::OutputPort< Eigen::MatrixXd >;
     extern template class RTT::OutputPort< Eigen::Matrix2d >;
     extern template class RTT::OutputPort< Eigen::Matrix3d >;
     extern template class RTT::OutputPort< Eigen::Matrix4d >;
 #endif
-#ifdef ORO_INPUT_PORT_HPP
+#if defined(ORO_INPUT_PORT_HPP) && !defined(_MSC_VER)
     extern template class RTT::InputPort< Eigen::MatrixXd >;
     extern template class RTT::InputPort< Eigen::Matrix2d >;
     extern template class RTT::InputPort< Eigen::Matrix3d >;
@@ -157,4 +157,3 @@ public:
 #endif
 
 #endif // ifndef EIGEN_TYPEKIT_HPP
-

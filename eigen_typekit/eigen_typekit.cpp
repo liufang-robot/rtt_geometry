@@ -34,6 +34,16 @@
 #include <rtt/internal/DataSourceGenerator.hpp>
 #include <boost/lexical_cast.hpp>
 
+// MSVC rejects exporting the ports' covariant getEndpoint() instantiations
+// (C2908). Match RTT's typekit and instantiate ports in their consumers.
+#ifdef _MSC_VER
+#define DECLARE_RTT_PORT_EXPORTS( Type )
+#else
+#define DECLARE_RTT_PORT_EXPORTS( Type ) \
+template class RTT_EXPORT RTT::OutputPort< Type >; \
+template class RTT_EXPORT RTT::InputPort< Type >;
+#endif
+
 #define DECLARE_RTT_VECTOR_EXPORTS( VectorType ) \
 template class RTT_EXPORT RTT::internal::DataSourceTypeInfo< VectorType >; \
 template class RTT_EXPORT RTT::internal::DataSource< VectorType >; \
@@ -42,8 +52,7 @@ template class RTT_EXPORT RTT::internal::AssignCommand< VectorType >; \
 template class RTT_EXPORT RTT::internal::ValueDataSource< VectorType >; \
 template class RTT_EXPORT RTT::internal::ConstantDataSource< VectorType >; \
 template class RTT_EXPORT RTT::internal::ReferenceDataSource< VectorType >; \
-template class RTT_EXPORT RTT::OutputPort< VectorType >; \
-template class RTT_EXPORT RTT::InputPort< VectorType >; \
+DECLARE_RTT_PORT_EXPORTS( VectorType ) \
 template class RTT_EXPORT RTT::Property< VectorType >; \
 template class RTT_EXPORT RTT::Attribute< VectorType >; \
 template class RTT_EXPORT RTT::Constant< VectorType >;
@@ -62,8 +71,7 @@ template class RTT_EXPORT RTT::internal::AssignCommand< MatrixType >; \
 template class RTT_EXPORT RTT::internal::ValueDataSource< MatrixType >; \
 template class RTT_EXPORT RTT::internal::ConstantDataSource< MatrixType >; \
 template class RTT_EXPORT RTT::internal::ReferenceDataSource< MatrixType >; \
-template class RTT_EXPORT RTT::OutputPort< MatrixType >; \
-template class RTT_EXPORT RTT::InputPort< MatrixType >; \
+DECLARE_RTT_PORT_EXPORTS( MatrixType ) \
 template class RTT_EXPORT RTT::Property< MatrixType >; \
 template class RTT_EXPORT RTT::Attribute< MatrixType >; \
 template class RTT_EXPORT RTT::Constant< MatrixType >;
