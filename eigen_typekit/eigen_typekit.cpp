@@ -34,16 +34,9 @@
 #include <rtt/internal/DataSourceGenerator.hpp>
 #include <boost/lexical_cast.hpp>
 
-// MSVC rejects exporting the ports' covariant getEndpoint() instantiations
-// (C2908). Match RTT's typekit and instantiate ports in their consumers.
-#ifdef _MSC_VER
-#define DECLARE_RTT_PORT_EXPORTS( Type )
-#else
-#define DECLARE_RTT_PORT_EXPORTS( Type ) \
-template class RTT_EXPORT RTT::OutputPort< Type >; \
-template class RTT_EXPORT RTT::InputPort< Type >;
-#endif
-
+// Follow OroGen on MSVC: instantiate templates in consumers. Explicit port
+// exports fail with C2908 for their covariant getEndpoint() return types.
+#ifndef _MSC_VER
 #define DECLARE_RTT_VECTOR_EXPORTS( VectorType ) \
 template class RTT_EXPORT RTT::internal::DataSourceTypeInfo< VectorType >; \
 template class RTT_EXPORT RTT::internal::DataSource< VectorType >; \
@@ -52,7 +45,8 @@ template class RTT_EXPORT RTT::internal::AssignCommand< VectorType >; \
 template class RTT_EXPORT RTT::internal::ValueDataSource< VectorType >; \
 template class RTT_EXPORT RTT::internal::ConstantDataSource< VectorType >; \
 template class RTT_EXPORT RTT::internal::ReferenceDataSource< VectorType >; \
-DECLARE_RTT_PORT_EXPORTS( VectorType ) \
+template class RTT_EXPORT RTT::OutputPort< VectorType >; \
+template class RTT_EXPORT RTT::InputPort< VectorType >; \
 template class RTT_EXPORT RTT::Property< VectorType >; \
 template class RTT_EXPORT RTT::Attribute< VectorType >; \
 template class RTT_EXPORT RTT::Constant< VectorType >;
@@ -71,7 +65,8 @@ template class RTT_EXPORT RTT::internal::AssignCommand< MatrixType >; \
 template class RTT_EXPORT RTT::internal::ValueDataSource< MatrixType >; \
 template class RTT_EXPORT RTT::internal::ConstantDataSource< MatrixType >; \
 template class RTT_EXPORT RTT::internal::ReferenceDataSource< MatrixType >; \
-DECLARE_RTT_PORT_EXPORTS( MatrixType ) \
+template class RTT_EXPORT RTT::OutputPort< MatrixType >; \
+template class RTT_EXPORT RTT::InputPort< MatrixType >; \
 template class RTT_EXPORT RTT::Property< MatrixType >; \
 template class RTT_EXPORT RTT::Attribute< MatrixType >; \
 template class RTT_EXPORT RTT::Constant< MatrixType >;
@@ -80,6 +75,8 @@ DECLARE_RTT_MATRIX_EXPORTS( Eigen::MatrixXd )
 DECLARE_RTT_MATRIX_EXPORTS( Eigen::Matrix2d )
 DECLARE_RTT_MATRIX_EXPORTS( Eigen::Matrix3d )
 DECLARE_RTT_MATRIX_EXPORTS( Eigen::Matrix4d )
+
+#endif
 
 #include <Eigen/Core>
 namespace Eigen{

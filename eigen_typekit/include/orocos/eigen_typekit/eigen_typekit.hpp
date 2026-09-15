@@ -40,6 +40,8 @@ public:
 };
 }
 
+// MSVC consumers instantiate these templates locally, as in OroGen typekits.
+#ifndef _MSC_VER
 #ifdef CORELIB_DATASOURCE_HPP
 #define DECLARE_VECTOR_CORELIB_DATASOURCE_HPP(VectorType) \
     extern template class RTT::internal::DataSourceTypeInfo< VectorType >; \
@@ -67,7 +69,7 @@ public:
     DECLARE_VECTOR_ORO_CORELIB_DATASOURCES_HPP(Eigen::Vector6d)
 #endif
 
-#if defined(ORO_OUTPUT_PORT_HPP) && !defined(_MSC_VER)
+#ifdef ORO_OUTPUT_PORT_HPP
     extern template class RTT::OutputPort< Eigen::VectorXd >;
     extern template class RTT::OutputPort< Eigen::Vector2d >;
     extern template class RTT::OutputPort< Eigen::Vector3d >;
@@ -75,7 +77,7 @@ public:
     extern template class RTT::OutputPort< Eigen::Vector6d >;
 #endif
 
-#if defined(ORO_INPUT_PORT_HPP) && !defined(_MSC_VER)
+#ifdef ORO_INPUT_PORT_HPP
     extern template class RTT::InputPort< Eigen::VectorXd >;
     extern template class RTT::InputPort< Eigen::Vector2d >;
     extern template class RTT::InputPort< Eigen::Vector3d >;
@@ -127,13 +129,13 @@ public:
     DECLARE_MATRIX_CORELIB_DATASOURCE_HPP(Eigen::Matrix3d)
     DECLARE_MATRIX_CORELIB_DATASOURCE_HPP(Eigen::Matrix4d)
 #endif
-#if defined(ORO_OUTPUT_PORT_HPP) && !defined(_MSC_VER)
+#ifdef ORO_OUTPUT_PORT_HPP
     extern template class RTT::OutputPort< Eigen::MatrixXd >;
     extern template class RTT::OutputPort< Eigen::Matrix2d >;
     extern template class RTT::OutputPort< Eigen::Matrix3d >;
     extern template class RTT::OutputPort< Eigen::Matrix4d >;
 #endif
-#if defined(ORO_INPUT_PORT_HPP) && !defined(_MSC_VER)
+#ifdef ORO_INPUT_PORT_HPP
     extern template class RTT::InputPort< Eigen::MatrixXd >;
     extern template class RTT::InputPort< Eigen::Matrix2d >;
     extern template class RTT::InputPort< Eigen::Matrix3d >;
@@ -156,4 +158,7 @@ public:
     DECLARE_MATRIX_ORO_CORELIB_ATTRIBUTE_HPP(Eigen::Matrix4d)
 #endif
 
+#endif // ifndef _MSC_VER
+
 #endif // ifndef EIGEN_TYPEKIT_HPP
+
