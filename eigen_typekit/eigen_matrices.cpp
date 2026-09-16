@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 #include "eigen_scripting.hpp"
+#include <sstream>
 
 namespace Eigen::rtt {
 template<class T> std::string matrixToString(const T& value) {

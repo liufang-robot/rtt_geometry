@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 #pragma once
 
-#include <eigen_typekit/eigen_typekit.hpp>
 #include <rtt/types/TemplateTypeInfo.hpp>
 #include <rtt/internal/DataSources.hpp>
 #include <rtt/internal/DataSourceGenerator.hpp>
 #include <rtt/internal/FusedFunctorDataSource.hpp>
+// The public typekit header declares extern templates for RTT classes that are
+// already included. Suppress implicit (possibly hidden) copies in these helper
+// translation units; eigen_typekit.cpp owns their exported instantiations.
+#include <eigen_typekit/eigen_typekit.hpp>
 #include <limits>
 #include <stdexcept>
 #include <type_traits>
