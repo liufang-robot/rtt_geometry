@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.8)
 project(eigen_typekit)
 
 find_package(Eigen3 QUIET)
@@ -30,7 +30,11 @@ include_directories(
 add_subdirectory(mqueue)
 add_subdirectory(corba)
 
-orocos_typekit(eigen_typekit eigen_typekit.cpp)
+orocos_typekit(eigen_typekit eigen_typekit.cpp eigen_vectors.cpp eigen_matrices.cpp eigen_quaternion.cpp)
+target_compile_features(eigen_typekit PRIVATE cxx_std_17)
+if(MSVC)
+  target_compile_options(eigen_typekit PRIVATE /bigobj)
+endif()
 
 orocos_install_headers(include/orocos/eigen_typekit/eigen_typekit.hpp)
 
