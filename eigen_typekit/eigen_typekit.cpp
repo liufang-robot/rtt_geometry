@@ -235,7 +235,7 @@ namespace Eigen{
                 std::stringstream out;
                 out << i+1;
                 str = out.str();
-                targetbag.add( new Property<double>(str, str +"th element of vector",vec(i)) ); // Put variables in the bag
+                targetbag.ownProperty( new Property<double>(str, str +"th element of vector",vec(i)) );
             }
 
             return true;
@@ -269,7 +269,7 @@ namespace Eigen{
                 RTT::Logger::log().logf(
                     RTT::Logger::Error,
                     "eigen_typekit",
-                    "Composing Property<%s>: type mismatch, got type '%s', expected type eigen_vector",
+                    "Composing Property<%s>: type mismatch, got type '%s'",
                     this->getTypeName().c_str(),
                     bag.getType().c_str());
                 return false;
@@ -293,7 +293,15 @@ namespace Eigen{
             for ( unsigned int i=0; i < dimension ; i++){
                 std::stringstream out;
                 out << i+1;
-                targetbag.add( new Property<VectorXd >(out.str(), out.str() +"th row of matrix",mat.row(i) )); // Put variables in the bag
+                Property<VectorXd> row(out.str(), out.str() +"th row of matrix",mat.row(i));
+                // CPF needs fully decomposed rows, including their canonical type name.
+                base::DataSourceBase::shared_ptr decomposed =
+                    row.getTypeInfo()->decomposeType(row.getDataSource());
+                RTT::internal::AssignableDataSource<PropertyBag>::shared_ptr row_bag =
+                    RTT::internal::AssignableDataSource<PropertyBag>::narrow(decomposed.get());
+                if (!row_bag)
+                    return false;
+                targetbag.ownProperty(new Property<PropertyBag>(row.getName(), row.getDescription(), row_bag));
             }
 
             return true;
@@ -352,7 +360,7 @@ namespace Eigen{
                 RTT::Logger::log().logf(
                     RTT::Logger::Error,
                     "eigen_typekit",
-                    "Composing Property<%s>: type mismatch, got type '%s', expected type ublas_matrix",
+                    "Composing Property<%s>: type mismatch, got type '%s'",
                     this->getTypeName().c_str(),
                     bag.getType().c_str());
                 return false;
@@ -489,30 +497,30 @@ namespace Eigen{
 
     bool EigenTypekitPlugin::loadTypes()
     {
-        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<VectorXd>("eigen_vector") );
-        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<Vector2d>("eigen_vector2") );
-        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<Vector3d>("eigen_vector3") );
-        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<Vector4d>("eigen_vector4") );
-        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<Vector6d>("eigen_vector6") );
-        RTT::types::TypeInfoRepository::Instance()->addType( new MatrixTypeInfo<MatrixXd>("eigen_matrix") );
-        RTT::types::TypeInfoRepository::Instance()->addType( new MatrixTypeInfo<Matrix2d>("eigen_matrix2") );
-        RTT::types::TypeInfoRepository::Instance()->addType( new MatrixTypeInfo<Matrix3d>("eigen_matrix3") );
-        RTT::types::TypeInfoRepository::Instance()->addType( new MatrixTypeInfo<Matrix4d>("eigen_matrix4") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<VectorXd>("/Eigen/VectorXd") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<Vector2d>("/Eigen/Vector2d") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<Vector3d>("/Eigen/Vector3d") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<Vector4d>("/Eigen/Vector4d") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new VectorTypeInfo<Vector6d>("/Eigen/Vector6d") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new MatrixTypeInfo<MatrixXd>("/Eigen/MatrixXd") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new MatrixTypeInfo<Matrix2d>("/Eigen/Matrix2d") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new MatrixTypeInfo<Matrix3d>("/Eigen/Matrix3d") );
+        RTT::types::TypeInfoRepository::Instance()->addType( new MatrixTypeInfo<Matrix4d>("/Eigen/Matrix4d") );
         return true;
     }
 
     bool EigenTypekitPlugin::loadConstructors()
     {
-        RTT::types::Types()->type("eigen_vector")->addConstructor(types::newConstructor(vector_size_constructor<VectorXd>()));
-        RTT::types::Types()->type("eigen_vector")->addConstructor(types::newConstructor(vector_size_value_constructor<VectorXd>()));
+        RTT::types::Types()->type("/Eigen/VectorXd")->addConstructor(types::newConstructor(vector_size_constructor<VectorXd>()));
+        RTT::types::Types()->type("/Eigen/VectorXd")->addConstructor(types::newConstructor(vector_size_value_constructor<VectorXd>()));
 
-        RTT::types::Types()->type("eigen_vector")->addConstructor(types::newConstructor(vector_array_constructor<VectorXd>(),true));
-        RTT::types::Types()->type("eigen_vector2")->addConstructor(types::newConstructor(vector_fixed_array_constructor<Vector2d>(),true));
-        RTT::types::Types()->type("eigen_vector3")->addConstructor(types::newConstructor(vector_fixed_array_constructor<Vector3d>(),true));
-        RTT::types::Types()->type("eigen_vector4")->addConstructor(types::newConstructor(vector_fixed_array_constructor<Vector4d>(),true));
-        RTT::types::Types()->type("eigen_vector6")->addConstructor(types::newConstructor(vector_fixed_array_constructor<Vector6d>(),true));
+        RTT::types::Types()->type("/Eigen/VectorXd")->addConstructor(types::newConstructor(vector_array_constructor<VectorXd>(),true));
+        RTT::types::Types()->type("/Eigen/Vector2d")->addConstructor(types::newConstructor(vector_fixed_array_constructor<Vector2d>(),true));
+        RTT::types::Types()->type("/Eigen/Vector3d")->addConstructor(types::newConstructor(vector_fixed_array_constructor<Vector3d>(),true));
+        RTT::types::Types()->type("/Eigen/Vector4d")->addConstructor(types::newConstructor(vector_fixed_array_constructor<Vector4d>(),true));
+        RTT::types::Types()->type("/Eigen/Vector6d")->addConstructor(types::newConstructor(vector_fixed_array_constructor<Vector6d>(),true));
         
-        RTT::types::Types()->type("eigen_matrix")->addConstructor(types::newConstructor(matrix_i_j_constructor<MatrixXd>()));
+        RTT::types::Types()->type("/Eigen/MatrixXd")->addConstructor(types::newConstructor(matrix_i_j_constructor<MatrixXd>()));
         return true;
     }
 
