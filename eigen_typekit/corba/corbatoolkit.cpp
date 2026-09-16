@@ -36,9 +36,9 @@ namespace Eigen
 
             bool CorbaEigenPlugin::registerTransport(std::string name, TypeInfo* ti)
             {
-                if ( name == "eigen_vector" )
+                if ( name == "/Eigen/VectorXd" )
                     return ti->addProtocol(ORO_CORBA_PROTOCOL_ID, new CorbaTemplateProtocol< Eigen::VectorXd >() );
-                if ( name == "eigen_matrix" )
+                if ( name == "/Eigen/MatrixXd" )
                     return ti->addProtocol(ORO_CORBA_PROTOCOL_ID, new CorbaTemplateProtocol< Eigen::MatrixXd >() );
                 return false;
             }
