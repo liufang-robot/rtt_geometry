@@ -132,10 +132,10 @@ public:
     extern template class RTT::internal::ConstantDataSource< MatrixType >; \
     extern template class RTT::internal::ReferenceDataSource< MatrixType >;
     
-    DECLARE_MATRIX_CORELIB_DATASOURCE_HPP(Eigen::MatrixXd)
-    DECLARE_MATRIX_CORELIB_DATASOURCE_HPP(Eigen::Matrix2d)
-    DECLARE_MATRIX_CORELIB_DATASOURCE_HPP(Eigen::Matrix3d)
-    DECLARE_MATRIX_CORELIB_DATASOURCE_HPP(Eigen::Matrix4d)
+    DECLARE_MATRIX_ORO_CORELIB_DATASOURCES_HPP(Eigen::MatrixXd)
+    DECLARE_MATRIX_ORO_CORELIB_DATASOURCES_HPP(Eigen::Matrix2d)
+    DECLARE_MATRIX_ORO_CORELIB_DATASOURCES_HPP(Eigen::Matrix3d)
+    DECLARE_MATRIX_ORO_CORELIB_DATASOURCES_HPP(Eigen::Matrix4d)
 #endif
 #ifdef ORO_OUTPUT_PORT_HPP
     extern template class RTT::OutputPort< Eigen::MatrixXd >;
